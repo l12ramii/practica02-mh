@@ -1,37 +1,33 @@
-import pandas as pd 
-import numpy as np 
- 
-from sklearn.ensemble import RandomForestClassifier 
-from sklearn.model_selection import cross_val_score 
-from sklearn.model_selection import train_test_split 
- 
- 
-# cargar dataset 
-data = pd.read_csv("winequality-red.csv") 
- 
-# convertir problema a clasificación binaria 
-data["quality"] = (data["quality"] >= 6).astype(int) 
- 
-X = data.drop("quality", axis=1) 
-y = data["quality"] 
- 
- 
-def evaluate_solution(params): 
- 
-    model = RandomForestClassifier( 
-        n_estimators=int(params[0]), 
-        max_depth=int(params[1]), 
-        min_samples_split=int(params[2]), 
-        min_samples_leaf=int(params[3]), 
-        max_features=float(params[4]), 
-        bootstrap=bool(params[5]), 
-        criterion="gini" if params[6] == 0 else "entropy", 
-        class_weight=None if params[7] == 0 else "balanced", 
-        max_leaf_nodes=int(params[8]), 
-        min_impurity_decrease=float(params[9]), 
-        random_state=42 
-    ) 
- 
-    scores = cross_val_score(model, X, y, cv=5, scoring="accuracy") 
- 
-    return scores.mean() 
+from src.randomSearch import random_search
+from src.utils import plot_results
+from src.gridSearch import grid_search
+
+if __name__ == "__main__":
+    while True:
+        print("\n=== Práctica 2: Metaheurísticas ===")
+        print("1. Ejecutar Random Search (600 iteraciones por defecto)")
+        print("2. Ejecutar Random Search (Especificar iteraciones)")
+        print("3. Grid Search (Rejilla predefinida)")
+        print("4. Salir")
+        
+        opcion = input("\nSeleccione una opción: ")
+
+        if opcion == "1":
+            best_params, best_accuracy, results_history, elapsed_time = random_search(n_iter=600)
+            print(f"\nResultado: {best_accuracy:.4f} en {elapsed_time:.2f}s")
+            plot_results(history=results_history, n_iter=600, alg="Random Search")
+        elif opcion == "2":
+            try:
+                n = int(input("Introduce el número de iteraciones: "))
+                best_params, best_accuracy, results_history, time = random_search(n_iter=n)
+            except ValueError:
+                print("Error: Por favor, introduce un número válido.")
+        elif opcion == "3":
+            best_p, best_acc, results_history, duration = grid_search()
+            print(f"\nResultado Grid Search: {best_acc:.4f} en {duration:.2f}s")
+            plot_results(history= results_history, n_iter=len(results_history), alg="Grid Search")
+        elif opcion == "4":
+            print("\nSaliendo...")
+            break
+        else:
+            print("Opción no válida.")

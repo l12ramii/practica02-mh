@@ -1,5 +1,6 @@
 import numpy as np
-from main import evaluate_solution 
+import time
+from .utils import evaluate_solution
 
 def random_search(n_iter):
     best_accuracy = 0
@@ -8,6 +9,7 @@ def random_search(n_iter):
 
     print(f"Iniciando Random Search ({n_iter} iteraciones)...")
     
+    start_time = time.time()
     for i in range(n_iter):
         # Generar parámetros aleatorios según los rangos
         params = [
@@ -30,5 +32,5 @@ def random_search(n_iter):
             best_accuracy = accuracy
             best_params = params
             print(f"Iteración {i+1}: Nuevo mejor accuracy encontrado -> {best_accuracy:.4f}")
-
-    return best_params, best_accuracy, results_history
+    stop_time = time.time()
+    return best_params, best_accuracy, results_history, stop_time - start_time
