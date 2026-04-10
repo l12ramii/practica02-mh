@@ -10,7 +10,7 @@ project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 data_path = os.path.join(project_dir, "data", "winequality-red.csv")
 
 # Cargar dataset
-data = pd.read_csv(data_path, sep=";") 
+data = pd.read_csv(data_path, sep=",") 
 
 # Convertir problema a clasificación binaria (bueno >= 6)
 data["quality"] = (data["quality"] >= 6).astype(int) 
