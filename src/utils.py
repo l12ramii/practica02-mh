@@ -74,6 +74,7 @@ def plot_results(history, n_iter, alg):
     plt.grid(True)
     
     # Guardar imagen
-    filename = f"random_search_{n_iter}_results.png"
+    alg_filename = alg.replace(" ", "_").lower()
+    filename = f'{alg_filename}_{n_iter}_iteraciones.png'
     plt.savefig(filename, bbox_inches='tight')
     plt.close()
