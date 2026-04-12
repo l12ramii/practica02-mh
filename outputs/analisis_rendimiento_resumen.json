@@ -1,0 +1,158 @@
+{
+  "config": {
+    "n_runs": 5,
+    "random_search_iters": 640,
+    "ga_max_evals": 640,
+    "ga_mode": "generational",
+    "known_optimum": null,
+    "optimum_tolerance": 1e-06
+  },
+  "reference_optimum_used": 0.736087382445141,
+  "best_known_found": 0.736087382445141,
+  "best_overall_run": {
+    "algorithm": "genetic_algorithm",
+    "run_id": 3,
+    "best_score": 0.736087382445141,
+    "best_params": [
+      185,
+      27,
+      13,
+      18,
+      0.791109307412237,
+      1,
+      1,
+      0,
+      35,
+      0.004213327267166645
+    ]
+  },
+  "summary_by_algorithm": [
+    {
+      "algorithm": "genetic_algorithm",
+      "runs": 5,
+      "mean_best_score": 0.7268365987460814,
+      "std_best_score": 0.01389784158610161,
+      "min_best_score": 0.7023432601880878,
+      "max_best_score": 0.736087382445141,
+      "cv_best_score": 0.019120998598691624,
+      "optimum_reference": 0.736087382445141,
+      "times_reached_reference": 1,
+      "mean_distance_to_reference": 0.00925078369905954,
+      "max_distance_to_reference": 0.033744122257053255,
+      "mean_iter_to_95pct_reference": 4.2,
+      "std_iter_to_95pct_reference": 3.1144823004794877,
+      "mean_wall_time_s": 62.85339575999999,
+      "std_wall_time_s": 8.286151306040985,
+      "mean_cpu_time_s": 62.509375,
+      "mean_cpu_usage_pct": 99.46215709441833,
+      "mean_peak_mem_mb_main_process": 0.6489213943481446
+    },
+    {
+      "algorithm": "random_search",
+      "runs": 5,
+      "mean_best_score": 0.7237131661442007,
+      "std_best_score": 0.014003812610659198,
+      "min_best_score": 0.6992163009404389,
+      "max_best_score": 0.7348315047021944,
+      "cv_best_score": 0.019349948661662075,
+      "optimum_reference": 0.736087382445141,
+      "times_reached_reference": 0,
+      "mean_distance_to_reference": 0.012374216300940422,
+      "max_distance_to_reference": 0.0368710815047022,
+      "mean_iter_to_95pct_reference": 5.2,
+      "std_iter_to_95pct_reference": 6.1400325732035,
+      "mean_wall_time_s": 55.79077886,
+      "std_wall_time_s": 8.423278145037749,
+      "mean_cpu_time_s": 55.565625,
+      "mean_cpu_usage_pct": 99.60627727280513,
+      "mean_peak_mem_mb_main_process": 0.7167922973632812
+    },
+    {
+      "algorithm": "grid_search",
+      "runs": 5,
+      "mean_best_score": 0.7192065047021944,
+      "std_best_score": 0.0,
+      "min_best_score": 0.7192065047021944,
+      "max_best_score": 0.7192065047021944,
+      "cv_best_score": 0.0,
+      "optimum_reference": 0.736087382445141,
+      "times_reached_reference": 0,
+      "mean_distance_to_reference": 0.016880877742946665,
+      "max_distance_to_reference": 0.016880877742946665,
+      "mean_iter_to_95pct_reference": 1.0,
+      "std_iter_to_95pct_reference": 0.0,
+      "mean_wall_time_s": 5.843580740000005,
+      "std_wall_time_s": 0.22402728005597145,
+      "mean_cpu_time_s": 5.821875,
+      "mean_cpu_usage_pct": 99.63448899580668,
+      "mean_peak_mem_mb_main_process": 0.5893348693847656
+    }
+  ],
+  "parameter_sensitivity": [
+    {
+      "param": "min_impurity_decrease",
+      "score_minus": 0.731087382445141,
+      "score_plus": 0.7335932601880877,
+      "drop_mean": 0.0037470611285266853
+    },
+    {
+      "param": "min_samples_leaf",
+      "score_minus": 0.729841300940439,
+      "score_plus": 0.7423471786833855,
+      "drop_mean": 0.003123040752351036
+    },
+    {
+      "param": "n_estimators",
+      "score_minus": 0.7335854231974921,
+      "score_plus": 0.7354623824451411,
+      "drop_mean": 0.0015634796238244708
+    },
+    {
+      "param": "max_features",
+      "score_minus": 0.7379721786833855,
+      "score_plus": 0.7329643416927899,
+      "drop_mean": 0.0015615203761755736
+    },
+    {
+      "param": "max_leaf_nodes",
+      "score_minus": 0.73483934169279,
+      "score_plus": 0.736087382445141,
+      "drop_mean": 0.0006240203761755381
+    },
+    {
+      "param": "max_depth",
+      "score_minus": 0.736087382445141,
+      "score_plus": 0.736087382445141,
+      "drop_mean": 0.0
+    },
+    {
+      "param": "bootstrap",
+      "score_minus": 0.736087382445141,
+      "score_plus": 0.736087382445141,
+      "drop_mean": 0.0
+    },
+    {
+      "param": "min_samples_split",
+      "score_minus": 0.736087382445141,
+      "score_plus": 0.736087382445141,
+      "drop_mean": 0.0
+    },
+    {
+      "param": "class_weight",
+      "score_minus": 0.736087382445141,
+      "score_plus": 0.736087382445141,
+      "drop_mean": 0.0
+    },
+    {
+      "param": "criterion",
+      "score_minus": 0.736087382445141,
+      "score_plus": 0.736087382445141,
+      "drop_mean": 0.0
+    }
+  ],
+  "notes": [
+    "peak_mem_mb_main_process mide memoria del proceso principal.",
+    "En algoritmos multiproceso (random/grid) puede infraestimar memoria total.",
+    "Si KNOWN_OPTIMUM es None, se usa best_known_found como referencia de optimo."
+  ]
+}

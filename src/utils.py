@@ -76,5 +76,8 @@ def plot_results(history, n_iter, alg):
     # Guardar imagen
     alg_filename = alg.replace(" ", "_").lower()
     filename = f'{alg_filename}_{n_iter}_iteraciones.png'
-    plt.savefig(filename, bbox_inches='tight')
+    output_dir = os.path.join(project_dir, "outputs")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, filename)
+    plt.savefig(output_path, bbox_inches='tight')
     plt.close()

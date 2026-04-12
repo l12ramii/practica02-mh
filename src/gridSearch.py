@@ -2,7 +2,13 @@ import time
 from itertools import product
 from .utils import evaluate_solution
 
-def grid_search():
+def _evaluate_combination(index, values):
+    """Evalua una combinacion y devuelve (indice, params, fitness)."""
+    params = list(values)
+    fitness = evaluate_solution(params)
+    return index, params, fitness
+
+def grid_search(patience=None, min_improvement=1e-4):
     # Definición de la rejilla (hay que ajustar para ~600 combinaciones)
     grid = {
         'n_estimators': [10, 100, 150, 200, 300],
@@ -17,29 +23,59 @@ def grid_search():
         'min_impurity_decrease': [0.0]
     }
 
-    # Generar todas las combinaciones posibles
-    keys = list(grid.keys())
-    combinations = list(product(*grid.values()))
-    n_comb = len(combinations)
+    # Numero total de combinaciones sin materializar la rejilla completa en memoria
+    n_comb = 1
+    for values in grid.values():
+        n_comb *= len(values)
+
+    if patience is None:
+        patience = 10
+    if patience <= 0:
+        raise ValueError("patience debe ser mayor que 0")
+    if min_improvement < 0:
+        raise ValueError("min_improvement no puede ser negativo")
     
     print(f"\n--- Iniciando Grid Search ({n_comb} combinaciones) ---")
-    
+
     best_fitness = -1
     best_params = None
     results_history = []
     start_time = time.time()
 
-    for i, values in enumerate(combinations):
-        # Mapear la combinación actual a la lista de 10 parámetros requerida
-        params = list(values)
-        
-        fitness = evaluate_solution(params)
+    no_significant_improvement = 0
+    print(f"Early stopping: patience={patience}, min_improvement={min_improvement}")
+
+    for i, values in enumerate(product(*grid.values())):
+        _, params, fitness = _evaluate_combination(i, values)
         results_history.append(fitness)
-        
+
+        prev_best = best_fitness
+        significant_improvement = False
+
         if fitness > best_fitness:
             best_fitness = fitness
             best_params = params
-            print(f"Combinación {i+1}/{n_comb}: Nuevo mejor accuracy -> {best_fitness:.5f}")
+            if (best_fitness - prev_best) > min_improvement:
+                significant_improvement = True
+
+        completed = i + 1
+        print(
+            f"Eval {completed}/{n_comb} (combinación {i+1}): "
+            f"accuracy={fitness:.5f} | mejor={best_fitness:.5f}"
+        )
+
+        if significant_improvement:
+            no_significant_improvement = 0
+        else:
+            no_significant_improvement += 1
+
+        if completed >= patience and no_significant_improvement >= patience:
+            print(
+                "Parada anticipada activada: "
+                f"{no_significant_improvement} evaluaciones sin mejora significativa "
+                f"(umbral={min_improvement})."
+            )
+            break
 
     elapsed_time = time.time() - start_time
     return best_params, best_fitness, results_history, elapsed_time
