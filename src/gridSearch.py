@@ -8,7 +8,7 @@ def _evaluate_combination(index, values):
     fitness = evaluate_solution(params)
     return index, params, fitness
 
-def grid_search(patience=None, min_improvement=1e-4):
+def grid_search(patience=None, min_improvement=1e-4, use_early_stopping=True):
     # Definición de la rejilla (hay que ajustar para ~600 combinaciones)
     grid = {
         'n_estimators': [10, 100, 150, 200, 300],
@@ -28,12 +28,13 @@ def grid_search(patience=None, min_improvement=1e-4):
     for values in grid.values():
         n_comb *= len(values)
 
-    if patience is None:
-        patience = 10
-    if patience <= 0:
-        raise ValueError("patience debe ser mayor que 0")
-    if min_improvement < 0:
-        raise ValueError("min_improvement no puede ser negativo")
+    if use_early_stopping:
+        if patience is None:
+            patience = 10
+        if patience <= 0:
+            raise ValueError("patience debe ser mayor que 0")
+        if min_improvement < 0:
+            raise ValueError("min_improvement no puede ser negativo")
     
     print(f"\n--- Iniciando Grid Search ({n_comb} combinaciones) ---")
 
@@ -43,7 +44,10 @@ def grid_search(patience=None, min_improvement=1e-4):
     start_time = time.time()
 
     no_significant_improvement = 0
-    print(f"Early stopping: patience={patience}, min_improvement={min_improvement}")
+    if use_early_stopping:
+        print(f"Early stopping: patience={patience}, min_improvement={min_improvement}")
+    else:
+        print("Early stopping desactivado para Grid Search")
 
     for i, values in enumerate(product(*grid.values())):
         _, params, fitness = _evaluate_combination(i, values)
@@ -69,7 +73,7 @@ def grid_search(patience=None, min_improvement=1e-4):
         else:
             no_significant_improvement += 1
 
-        if completed >= patience and no_significant_improvement >= patience:
+        if use_early_stopping and completed >= patience and no_significant_improvement >= patience:
             print(
                 "Parada anticipada activada: "
                 f"{no_significant_improvement} evaluaciones sin mejora significativa "

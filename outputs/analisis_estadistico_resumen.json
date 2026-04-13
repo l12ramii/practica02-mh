@@ -1,0 +1,124 @@
+{
+  "alpha": 0.05,
+  "n_blocks": 30,
+  "algorithms": [
+    "genetic_algorithm",
+    "grid_search",
+    "random_search"
+  ],
+  "control_algorithm": "genetic_algorithm",
+  "friedman": {
+    "statistic": 28.46666666666664,
+    "p_value": 6.584981965263026e-07,
+    "critical_value": 5.991,
+    "hypothesis": "Reject H0 with alpha = 0.05 (Different distributions)",
+    "rankings": {
+      "genetic_algorithm": 1.4333333333333333,
+      "grid_search": 2.7666666666666666,
+      "random_search": 1.8
+    }
+  },
+  "post_hoc": {
+    "applied": true,
+    "methods": [
+      "bonferroni_dunn",
+      "holm"
+    ],
+    "pairwise_comparisons": {
+      "bonferroni_dunn": [
+        {
+          "method": "bonferroni_dunn",
+          "algorithm_a": "genetic_algorithm",
+          "algorithm_b": "grid_search",
+          "statistic_z": 5.163977794943222,
+          "p_value": 2.4175638824175394e-07,
+          "adjusted_alpha": 0.025,
+          "adjusted_p_value": 4.835127764835079e-07,
+          "result": "Reject H0",
+          "significant_difference": true
+        },
+        {
+          "method": "bonferroni_dunn",
+          "algorithm_a": "genetic_algorithm",
+          "algorithm_b": "random_search",
+          "statistic_z": 1.4200938936093865,
+          "p_value": 0.15558034779219776,
+          "adjusted_alpha": 0.025,
+          "adjusted_p_value": 0.3111606955843955,
+          "result": "Fail to Reject H0",
+          "significant_difference": false
+        }
+      ],
+      "holm": [
+        {
+          "method": "holm",
+          "algorithm_a": "genetic_algorithm",
+          "algorithm_b": "grid_search",
+          "statistic_z": 5.163977794943222,
+          "p_value": 2.4175638824175394e-07,
+          "adjusted_alpha": 0.025,
+          "adjusted_p_value": 4.835127764835079e-07,
+          "result": "Reject H0",
+          "significant_difference": true
+        },
+        {
+          "method": "holm",
+          "algorithm_a": "genetic_algorithm",
+          "algorithm_b": "random_search",
+          "statistic_z": 1.4200938936093865,
+          "p_value": 0.15558034779219776,
+          "adjusted_alpha": 0.05,
+          "adjusted_p_value": 0.15558034779219776,
+          "result": "Fail to Reject H0",
+          "significant_difference": false
+        }
+      ]
+    },
+    "tables": {
+      "bonferroni_dunn": [
+        {
+          "Comparison": "genetic_algorithm vs grid_search",
+          "Statistic (Z)": 5.163977794943222,
+          "p-value": 2.4175638824175394e-07,
+          "Adjusted alpha": 0.025,
+          "Adjusted p-value": 4.835127764835079e-07,
+          "alpha": 0.05,
+          "Results": "Reject H0"
+        },
+        {
+          "Comparison": "genetic_algorithm vs random_search",
+          "Statistic (Z)": 1.4200938936093865,
+          "p-value": 0.15558034779219776,
+          "Adjusted alpha": 0.025,
+          "Adjusted p-value": 0.3111606955843955,
+          "alpha": 0.05,
+          "Results": "Fail to Reject H0"
+        }
+      ],
+      "holm": [
+        {
+          "Comparison": "genetic_algorithm vs grid_search",
+          "Statistic (Z)": 5.163977794943222,
+          "p-value": 2.4175638824175394e-07,
+          "Adjusted alpha": 0.025,
+          "Adjusted p-value": 4.835127764835079e-07,
+          "alpha": 0.05,
+          "Results": "Reject H0"
+        },
+        {
+          "Comparison": "genetic_algorithm vs random_search",
+          "Statistic (Z)": 1.4200938936093865,
+          "p-value": 0.15558034779219776,
+          "Adjusted alpha": 0.05,
+          "Adjusted p-value": 0.15558034779219776,
+          "alpha": 0.05,
+          "Results": "Fail to Reject H0"
+        }
+      ]
+    },
+    "figures": {
+      "bonferroni_dunn": "C:\\Users\\megal\\OneDrive\\Escritorio\\P2\\practica02-mh\\outputs\\graficas_barras\\friedman_bonferroni_dunn.png",
+      "holm": "C:\\Users\\megal\\OneDrive\\Escritorio\\P2\\practica02-mh\\outputs\\graficas_barras\\friedman_holm.png"
+    }
+  }
+}

@@ -66,7 +66,7 @@ def crossover_uniform(parent1, parent2):
             h2.append(parent1[i])
     return h1, h2
 
-def mutate(params, pm=0.3, sigma=0.2):
+def mutate(params, pm=0.2, sigma=0.1):
     """Mutacion gaussiana por gen con recorte a limites del dominio."""
     mutado = np.array(params, dtype=float, copy=True)
 

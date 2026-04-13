@@ -18,10 +18,11 @@ from src.utils import evaluate_solution
 # ------------------------------
 # Configuracion del experimento
 # ------------------------------
-N_RUNS = 5
+N_RUNS = 30
 RANDOM_SEARCH_ITERS = 640
 GA_MAX_EVALS = 640
 GA_MODE = "generational"  # "generational" o "steady-state"
+GRID_SEARCH_USE_EARLY_STOPPING = True  # Cambiar a False para evaluar toda la rejilla
 
 # Si no se conoce el optimo, dejar en None.
 KNOWN_OPTIMUM = None
@@ -153,7 +154,11 @@ def _estimate_param_sensitivity(best_params, baseline_score):
 def _run_experiment():
 	algorithms = {
 		"random_search": lambda: random_search(n_iter=RANDOM_SEARCH_ITERS, patience=None, min_improvement=1e-4),
-		"grid_search": lambda: grid_search(patience=None, min_improvement=1e-4),
+		"grid_search": lambda: grid_search(
+			patience=None,
+			min_improvement=1e-4,
+			use_early_stopping=GRID_SEARCH_USE_EARLY_STOPPING,
+		),
 		"genetic_algorithm": lambda: genetic_algorithm(
 			mode=GA_MODE,
 			max_evals=GA_MAX_EVALS,
@@ -165,9 +170,11 @@ def _run_experiment():
 	all_runs = []
 
 	for alg_name, runner in algorithms.items():
-		print(f"\n=== Ejecutando {alg_name} ({N_RUNS} repeticiones) ===")
-		for run_id in range(1, N_RUNS + 1):
-			print(f"\n[{alg_name}] ejecución {run_id}/{N_RUNS}")
+		# Grid Search es determinístico: solo ejecutar una vez
+		num_runs = 1 if alg_name == "grid_search" else N_RUNS
+		print(f"\n=== Ejecutando {alg_name} ({num_runs} repeticiones) ===")
+		for run_id in range(1, num_runs + 1):
+			print(f"\n[{alg_name}] ejecución {run_id}/{num_runs}")
 			(
 				best_params,
 				best_score,
@@ -417,10 +424,14 @@ def _save_combined_convergence_chart(convergence_df):
 
 def _save_outputs(summary_df, per_run_df, convergence_df, sensitivity_df, reference_optimum, best_known, top_run):
 	json_out = os.path.join(OUTPUT_DIR, "analisis_rendimiento_resumen.json")
+	per_run_csv = os.path.join(OUTPUT_DIR, "per_run_results.csv")
+	per_run_json = os.path.join(OUTPUT_DIR, "per_run_results.json")
 	print("Generando gráficas de barras...")
 	charts = _save_summary_bar_charts(summary_df)
 	print("Generando gráfica de convergencia comparada...")
 	convergence_chart = _save_combined_convergence_chart(convergence_df)
+	per_run_df.to_csv(per_run_csv, index=False)
+	per_run_df.to_json(per_run_json, orient="records", force_ascii=False, indent=2)
 
 	payload = {
 		"config": {
@@ -428,6 +439,7 @@ def _save_outputs(summary_df, per_run_df, convergence_df, sensitivity_df, refere
 			"random_search_iters": RANDOM_SEARCH_ITERS,
 			"ga_max_evals": GA_MAX_EVALS,
 			"ga_mode": GA_MODE,
+			"grid_search_use_early_stopping": GRID_SEARCH_USE_EARLY_STOPPING,
 			"known_optimum": KNOWN_OPTIMUM,
 			"optimum_tolerance": OPTIMUM_TOLERANCE,
 		},
@@ -455,6 +467,8 @@ def _save_outputs(summary_df, per_run_df, convergence_df, sensitivity_df, refere
 	print(f"- {os.path.join(OUTPUT_DIR, 'graficas_barras')}")
 	print(f"- Total de graficas: {len(charts) + 1}")
 	print(f"- {convergence_chart}")
+	print(f"- {per_run_csv}")
+	print(f"- {per_run_json}")
 	print(f"- {json_out}")
 
 
