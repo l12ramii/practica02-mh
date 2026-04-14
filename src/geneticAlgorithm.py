@@ -1,6 +1,14 @@
+import argparse
 import numpy as np
 import time
-from .utils import evaluate_solution
+
+try:
+    from .utils import evaluate_solution
+except ImportError:
+    from utils import evaluate_solution
+
+DEFAULT_PATIENCE = 10
+DEFAULT_MIN_IMPROVEMENT = 1e-4
 
 # Limites por gen: [min, max] para los 10 hiperparametros.
 LIMITS = np.array([
@@ -88,12 +96,12 @@ def mutate(params, pm=0.2, sigma=0.1):
 
     return mutado.tolist()
 
-def genetic_algorithm(mode="generational", pop_size=20, max_evals=10, patience=None, min_improvement=1e-4):
+def genetic_algorithm(mode="generational", pop_size=20, max_evals=10, patience=None, min_improvement=DEFAULT_MIN_IMPROVEMENT):
     """ Algoritmo Genético unificado (Generacional/Estacionario)."""
     if max_evals <= 0:
         raise ValueError("max_evals debe ser mayor que 0")
     if patience is None:
-        patience = 10
+        patience = DEFAULT_PATIENCE
     if patience <= 0:
         raise ValueError("patience debe ser mayor que 0")
     if min_improvement < 0:
@@ -249,3 +257,40 @@ def genetic_algorithm(mode="generational", pop_size=20, max_evals=10, patience=N
 
     elapsed_time = time.time() - start_time
     return best_params, best_fitness, results_history, elapsed_time
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Ejecuta Algoritmo Genético")
+    parser.add_argument(
+        "--mode",
+        choices=["generational", "steady-state"],
+        default="generational",
+        help="Modo de evolución del algoritmo",
+    )
+    parser.add_argument("--max-evals", type=int, default=640, help="Número máximo de evaluaciones")
+    parser.add_argument(
+        "--patience",
+        type=int,
+        default=DEFAULT_PATIENCE,
+        help="Evaluaciones sin mejora significativa para parar",
+    )
+    parser.add_argument(
+        "--min-improvement",
+        type=float,
+        default=DEFAULT_MIN_IMPROVEMENT,
+        help="Umbral mínimo de mejora considerado significativo",
+    )
+    args = parser.parse_args()
+
+    best_params, best_fitness, history, duration = genetic_algorithm(
+        mode=args.mode,
+        max_evals=args.max_evals,
+        patience=args.patience,
+        min_improvement=args.min_improvement
+    )
+
+    print("\n--- Resultado ejecución directa ---")
+    print(f"Mejor accuracy: {best_fitness:.5f}")
+    print(f"Tiempo total: {duration:.2f}s")
+    print(f"Número de evaluaciones: {len(history)}")
+    print(f"Mejores parámetros: {best_params}")

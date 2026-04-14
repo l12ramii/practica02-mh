@@ -1,6 +1,14 @@
+import argparse
 import numpy as np
 import time
-from .utils import evaluate_solution
+
+try:
+    from .utils import evaluate_solution
+except ImportError:
+    from utils import evaluate_solution
+
+DEFAULT_PATIENCE = 10
+DEFAULT_MIN_IMPROVEMENT = 1e-4
 
 def _generate_random_params():
     """Genera un conjunto de hiperparametros aleatorios dentro de los rangos definidos."""
@@ -22,11 +30,11 @@ def _evaluate_iteration(index, params):
     accuracy = evaluate_solution(params)
     return index, params, accuracy
 
-def random_search(n_iter, patience=None, min_improvement=1e-4):
+def random_search(n_iter, patience=None, min_improvement=DEFAULT_MIN_IMPROVEMENT):
     if n_iter <= 0:
         raise ValueError("n_iter debe ser mayor que 0")
     if patience is None:
-        patience = 10
+        patience = DEFAULT_PATIENCE
     if patience <= 0:
         raise ValueError("patience debe ser mayor que 0")
     if min_improvement < 0:
@@ -75,3 +83,33 @@ def random_search(n_iter, patience=None, min_improvement=1e-4):
 
     stop_time = time.time()
     return best_params, best_accuracy, results_history, stop_time - start_time
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Ejecuta Random Search")
+    parser.add_argument("--n-iter", type=int, default=10, help="Número de iteraciones")
+    parser.add_argument(
+        "--patience",
+        type=int,
+        default=DEFAULT_PATIENCE,
+        help="Iteraciones sin mejora significativa para parar",
+    )
+    parser.add_argument(
+        "--min-improvement",
+        type=float,
+        default=DEFAULT_MIN_IMPROVEMENT,
+        help="Umbral mínimo de mejora considerado significativo",
+    )
+    args = parser.parse_args()
+
+    best_params, best_accuracy, history, duration = random_search(
+        n_iter=args.n_iter,
+        patience=args.patience,
+        min_improvement=args.min_improvement
+    )
+
+    print("\n--- Resultado ejecución directa ---")
+    print(f"Mejor accuracy: {best_accuracy:.5f}")
+    print(f"Tiempo total: {duration:.2f}s")
+    print(f"Número de evaluaciones: {len(history)}")
+    print(f"Mejores parámetros: {best_params}")

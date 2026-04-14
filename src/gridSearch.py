@@ -1,6 +1,14 @@
+import argparse
 import time
 from itertools import product
-from .utils import evaluate_solution
+
+try:
+    from .utils import evaluate_solution
+except ImportError:
+    from utils import evaluate_solution
+
+DEFAULT_PATIENCE = 10
+DEFAULT_MIN_IMPROVEMENT = 1e-4
 
 def _evaluate_combination(index, values):
     """Evalua una combinacion y devuelve (indice, params, fitness)."""
@@ -8,7 +16,7 @@ def _evaluate_combination(index, values):
     fitness = evaluate_solution(params)
     return index, params, fitness
 
-def grid_search(patience=None, min_improvement=1e-4, use_early_stopping=True):
+def grid_search(patience=None, min_improvement=DEFAULT_MIN_IMPROVEMENT, use_early_stopping=True):
     # Definición de la rejilla (hay que ajustar para ~600 combinaciones)
     grid = {
         'n_estimators': [10, 100, 150, 200, 300],
@@ -30,7 +38,7 @@ def grid_search(patience=None, min_improvement=1e-4, use_early_stopping=True):
 
     if use_early_stopping:
         if patience is None:
-            patience = 10
+            patience = DEFAULT_PATIENCE
         if patience <= 0:
             raise ValueError("patience debe ser mayor que 0")
         if min_improvement < 0:
@@ -83,3 +91,37 @@ def grid_search(patience=None, min_improvement=1e-4, use_early_stopping=True):
 
     elapsed_time = time.time() - start_time
     return best_params, best_fitness, results_history, elapsed_time
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Ejecuta Grid Search")
+    parser.add_argument(
+        "--patience",
+        type=int,
+        default=DEFAULT_PATIENCE,
+        help="Evaluaciones sin mejora significativa para parar",
+    )
+    parser.add_argument(
+        "--min-improvement",
+        type=float,
+        default=DEFAULT_MIN_IMPROVEMENT,
+        help="Umbral mínimo de mejora considerado significativo",
+    )
+    parser.add_argument(
+        "--no-early-stopping",
+        action="store_true",
+        help="Desactiva la parada anticipada",
+    )
+    args = parser.parse_args()
+
+    best_params, best_fitness, history, duration = grid_search(
+        patience=args.patience,
+        min_improvement=args.min_improvement,
+        use_early_stopping=not args.no_early_stopping
+    )
+
+    print("\n--- Resultado ejecución directa ---")
+    print(f"Mejor accuracy: {best_fitness:.5f}")
+    print(f"Tiempo total: {duration:.2f}s")
+    print(f"Número de evaluaciones: {len(history)}")
+    print(f"Mejores parámetros: {best_params}")
